@@ -28,6 +28,9 @@ function formatNumber(num: number): string {
 
 export function SavingsCalculatorPage() {
   const [products, setProducts] = useState<SavingsProduct[]>([]);
+  const [targetAmount, setTargetAmount] = useState('');
+  const [monthlyAmount, setMonthlyAmount] = useState('');
+  const [savingPeriod, setSavingPeriod] = useState(12);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -38,17 +41,55 @@ export function SavingsCalculatorPage() {
     fetchProducts();
   }, []);
 
+  const filteredProducts = products.filter((product) => {
+    const monthlyAmountNum = Number(monthlyAmount.replace(/,/g, ''));
+
+    if (!monthlyAmount || monthlyAmountNum === 0) {
+      return true;
+    }
+
+    const isMonthlyAmountValid =
+      monthlyAmountNum >= product.minMonthlyAmount && monthlyAmountNum <= product.maxMonthlyAmount;
+
+    const isPeriodValid = product.availableTerms === savingPeriod;
+
+    return isMonthlyAmountValid && isPeriodValid;
+  });
+
   return (
     <>
       <NavigationBar title="적금 계산기" />
 
       <Spacing size={16} />
 
-      <TextField label="목표 금액" placeholder="목표 금액을 입력하세요" suffix="원" />
+      <TextField
+        label="목표 금액"
+        placeholder="목표 금액을 입력하세요"
+        suffix="원"
+        value={targetAmount}
+        onChange={(e) => {
+          const value = e.target.value.replace(/[^0-9]/g, '');
+          setTargetAmount(value ? formatNumber(Number(value)) : '');
+        }}
+      />
       <Spacing size={16} />
-      <TextField label="월 납입액" placeholder="희망 월 납입액을 입력하세요" suffix="원" />
+      <TextField
+        label="월 납입액"
+        placeholder="희망 월 납입액을 입력하세요"
+        suffix="원"
+        value={monthlyAmount}
+        onChange={(e) => {
+          const value = e.target.value.replace(/[^0-9]/g, '');
+          setMonthlyAmount(value ? formatNumber(Number(value)) : '');
+        }}
+      />
       <Spacing size={16} />
-      <SelectBottomSheet label="저축 기간" title="저축 기간을 선택해주세요" value={12} onChange={() => {}}>
+      <SelectBottomSheet<number>
+        label="저축 기간"
+        title="저축 기간을 선택해주세요"
+        value={savingPeriod}
+        onChange={setSavingPeriod}
+      >
         <SelectBottomSheet.Option value={6}>6개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={12}>12개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={24}>24개월</SelectBottomSheet.Option>
@@ -67,7 +108,7 @@ export function SavingsCalculatorPage() {
       </Tab.Item>
     </Tab>
 
-    {products.map((product) => (
+    {filteredProducts.map((product) => (
       <ListRow
         key={product.id}
         contents={
