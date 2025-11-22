@@ -31,6 +31,7 @@ export function SavingsCalculatorPage() {
   const [targetAmount, setTargetAmount] = useState('');
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [savingPeriod, setSavingPeriod] = useState(12);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -108,23 +109,28 @@ export function SavingsCalculatorPage() {
       </Tab.Item>
     </Tab>
 
-    {filteredProducts.map((product) => (
-      <ListRow
-        key={product.id}
-        contents={
-          <ListRow.Texts
-            type="3RowTypeA"
-            top={product.name}
-            topProps={{ fontSize: 16, fontWeight: 'bold', color: colors.grey900 }}
-            middle={`연 이자율: ${product.annualRate}%`}
-            middleProps={{ fontSize: 14, color: colors.blue600, fontWeight: 'medium' }}
-            bottom={`${formatNumber(product.minMonthlyAmount)}원 ~ ${formatNumber(product.maxMonthlyAmount)}원 | ${product.availableTerms}개월`}
-            bottomProps={{ fontSize: 13, color: colors.grey600 }}
-          />
-        }
-        onClick={() => {}}
-      />
-    ))}
+    {filteredProducts.map((product) => {
+      const isSelected = selectedProductId === product.id;
+
+      return (
+        <ListRow
+          key={product.id}
+          contents={
+            <ListRow.Texts
+              type="3RowTypeA"
+              top={product.name}
+              topProps={{ fontSize: 16, fontWeight: 'bold', color: colors.grey900 }}
+              middle={`연 이자율: ${product.annualRate}%`}
+              middleProps={{ fontSize: 14, color: colors.blue600, fontWeight: 'medium' }}
+              bottom={`${formatNumber(product.minMonthlyAmount)}원 ~ ${formatNumber(product.maxMonthlyAmount)}원 | ${product.availableTerms}개월`}
+              bottomProps={{ fontSize: 13, color: colors.grey600 }}
+            />
+          }
+          right={isSelected ? <Assets.Icon name="icon-check-circle-green" /> : null}
+          onClick={() => setSelectedProductId(product.id)}
+        />
+      );
+    })}
 
       {/* 아래는 계산 결과 탭 내용이에요. 계산 결과 탭을 구현할 때 주석을 해제해주세요. */}
       {/* <Spacing size={8} />
