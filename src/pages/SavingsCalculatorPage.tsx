@@ -120,7 +120,7 @@ export function SavingsCalculatorPage() {
       </Tab>
 
       {activeTab === 'products' ? (
-        <>
+        <div key="products-tab">
           {filteredProducts.map((product: SavingsProduct) => {
             const isSelected = selectedProductId === product.id;
 
@@ -143,9 +143,9 @@ export function SavingsCalculatorPage() {
               />
             );
           })}
-        </>
+        </div>
       ) : (
-        <>
+        <div key="results-tab">
           {selectedProduct ? (
             <>
               <Spacing size={8} />
@@ -242,7 +242,7 @@ export function SavingsCalculatorPage() {
           ) : (
             <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />
           )}
-        </>
+        </div>
       )}
     </>
   );
