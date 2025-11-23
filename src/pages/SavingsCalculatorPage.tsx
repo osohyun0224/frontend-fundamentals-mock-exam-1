@@ -23,7 +23,7 @@ export function SavingsCalculatorPage() {
       <Spacing size={8} />
 
       <Tab
-        onChange={(value) => {
+        onChange={value => {
           if (value === 'products' || value === 'results') {
             setActiveTab(value);
           }

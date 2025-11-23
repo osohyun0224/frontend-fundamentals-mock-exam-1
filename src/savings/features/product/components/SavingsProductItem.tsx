@@ -45,4 +45,3 @@ export function SavingsProductItem({ product }: SavingsProductItemProps) {
     </div>
   );
 }
-

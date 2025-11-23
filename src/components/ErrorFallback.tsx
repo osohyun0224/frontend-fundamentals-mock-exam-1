@@ -27,4 +27,3 @@ export function ErrorFallback({ error, reset }: ErrorBoundaryFallbackProps) {
     </div>
   );
 }
-

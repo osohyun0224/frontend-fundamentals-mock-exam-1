@@ -11,18 +11,9 @@ interface AmountFieldProps {
 export function AmountField({ label, placeholder, value, onChange }: AmountFieldProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numericValue = e.target.value.replace(/[^0-9]/g, '');
-    
+
     onChange(numericValue ? formatNumber(Number(numericValue)) : '');
   };
 
-  return (
-    <TextField
-      label={label}
-      placeholder={placeholder}
-      suffix="원"
-      value={value}
-      onChange={handleChange}
-    />
-  );
+  return <TextField label={label} placeholder={placeholder} suffix="원" value={value} onChange={handleChange} />;
 }
-

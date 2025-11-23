@@ -5,4 +5,3 @@ export function formatNumber(num: number): string {
 export function parseFormattedNumber(value: string): number {
   return Number(value.replace(/,/g, ''));
 }
-

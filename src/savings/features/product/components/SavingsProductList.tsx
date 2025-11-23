@@ -25,10 +25,9 @@ export function SavingsProductList() {
 
   return (
     <div key="products-tab">
-      {filteredProducts.map((product) => (
+      {filteredProducts.map(product => (
         <SavingsProductItem key={product.id} product={product} />
       ))}
     </div>
   );
 }
-

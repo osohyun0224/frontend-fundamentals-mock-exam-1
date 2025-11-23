@@ -1,13 +1,9 @@
 import { useMemo } from 'react';
 import type { SavingsProduct } from '@/savings/api/savingsProducts';
 
-export function useFilteredProducts(
-  products: SavingsProduct[],
-  monthlyAmount: string,
-  savingPeriod: number
-) {
+export function useFilteredProducts(products: SavingsProduct[], monthlyAmount: string, savingPeriod: number) {
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    return products.filter(product => {
       const monthlyAmountNum = Number(monthlyAmount.replace(/,/g, ''));
 
       if (!monthlyAmount || monthlyAmountNum === 0) {
@@ -15,8 +11,7 @@ export function useFilteredProducts(
       }
 
       const isMonthlyAmountValid =
-        monthlyAmountNum >= product.minMonthlyAmount &&
-        monthlyAmountNum <= product.maxMonthlyAmount;
+        monthlyAmountNum >= product.minMonthlyAmount && monthlyAmountNum <= product.maxMonthlyAmount;
 
       const isPeriodValid = product.availableTerms === savingPeriod;
 
@@ -36,4 +31,3 @@ export function useFilteredProducts(
     recommendedProducts,
   };
 }
-

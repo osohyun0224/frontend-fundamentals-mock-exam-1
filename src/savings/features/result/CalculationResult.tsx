@@ -9,13 +9,7 @@ import { SavingsProductItem } from '../product/components/SavingsProductItem';
 import { useSavingsContext } from '@/savings/contexts/SavingsContext';
 
 export function CalculationResult() {
-  const {
-    selectedProduct,
-    targetAmount,
-    monthlyAmount,
-    savingPeriod,
-    recommendedProducts,
-  } = useSavingsContext();
+  const { selectedProduct, targetAmount, monthlyAmount, savingPeriod, recommendedProducts } = useSavingsContext();
 
   if (!selectedProduct) {
     return (
@@ -28,11 +22,7 @@ export function CalculationResult() {
   const targetAmountNum = parseFormattedNumber(targetAmount);
   const monthlyAmountNum = parseFormattedNumber(monthlyAmount);
 
-  const expectedAmount = calculateExpectedAmount(
-    monthlyAmountNum,
-    savingPeriod,
-    selectedProduct.annualRate
-  );
+  const expectedAmount = calculateExpectedAmount(monthlyAmountNum, savingPeriod, selectedProduct.annualRate);
   const difference = calculateDifference(targetAmountNum, expectedAmount);
   const recommendedMonthlyAmount = calculateRecommendedMonthlyAmount(
     targetAmountNum,
@@ -44,9 +34,7 @@ export function CalculationResult() {
     <div key="results-tab">
       <Spacing size={8} />
 
-      <ListHeader
-        title={<ListHeader.TitleParagraph fontWeight="bold">선택한 상품</ListHeader.TitleParagraph>}
-      />
+      <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">선택한 상품</ListHeader.TitleParagraph>} />
       <Spacing size={12} />
 
       <SavingsProductItem product={selectedProduct} />
@@ -93,12 +81,10 @@ export function CalculationResult() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <ListHeader
-        title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>}
-      />
+      <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
       <Spacing size={12} />
 
-      {recommendedProducts.map((product) => (
+      {recommendedProducts.map(product => (
         <SavingsProductItem key={product.id} product={product} />
       ))}
 
@@ -106,4 +92,3 @@ export function CalculationResult() {
     </div>
   );
 }
-

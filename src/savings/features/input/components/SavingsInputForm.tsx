@@ -4,14 +4,8 @@ import { AmountField } from './AmountField';
 import { PeriodField } from './PeriodField';
 
 export function SavingsInputForm() {
-  const {
-    targetAmount,
-    monthlyAmount,
-    savingPeriod,
-    setTargetAmount,
-    setMonthlyAmount,
-    setSavingPeriod,
-  } = useSavingsContext();
+  const { targetAmount, monthlyAmount, savingPeriod, setTargetAmount, setMonthlyAmount, setSavingPeriod } =
+    useSavingsContext();
 
   return (
     <>
@@ -33,4 +27,3 @@ export function SavingsInputForm() {
     </>
   );
 }
-

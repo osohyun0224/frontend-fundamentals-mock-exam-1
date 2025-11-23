@@ -8,4 +8,3 @@ export function useSavingsProducts() {
     queryFn: fetchSavingsProducts,
   });
 }
-

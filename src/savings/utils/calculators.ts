@@ -1,9 +1,4 @@
-
-export function calculateExpectedAmount(
-  monthlyAmount: number,
-  savingPeriod: number,
-  annualRate: number
-): number {
+export function calculateExpectedAmount(monthlyAmount: number, savingPeriod: number, annualRate: number): number {
   return monthlyAmount * savingPeriod * (1 + (annualRate / 100) * 0.5);
 }
 
@@ -19,4 +14,3 @@ export function calculateRecommendedMonthlyAmount(
   const rawAmount = targetAmount / (savingPeriod * (1 + (annualRate / 100) * 0.5));
   return Math.round(rawAmount / 1000) * 1000;
 }
-

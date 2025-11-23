@@ -5,7 +5,7 @@ export function useSavingsSelection(products: SavingsProduct[]) {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const selectedProduct = useMemo(() => {
-    return products.find((product) => product.id === selectedProductId);
+    return products.find(product => product.id === selectedProductId);
   }, [products, selectedProductId]);
 
   return {
@@ -14,4 +14,3 @@ export function useSavingsSelection(products: SavingsProduct[]) {
     setSelectedProductId,
   };
 }
-

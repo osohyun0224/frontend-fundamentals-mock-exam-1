@@ -12,4 +12,3 @@ export interface SavingsProduct {
 export async function fetchSavingsProducts(): Promise<SavingsProduct[]> {
   return http.get<SavingsProduct[]>('/api/savings-products');
 }
-
