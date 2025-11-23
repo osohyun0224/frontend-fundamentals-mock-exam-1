@@ -9,7 +9,7 @@ interface SavingsContextValue {
   selectedProductId: string | null;
   selectedProduct: SavingsProduct | undefined;
   
-  setSelectedProductId: (id: string) => void;
+  setSelectedProductId: (id: string | null) => void;
   
   filteredProducts: SavingsProduct[];
   recommendedProducts: SavingsProduct[];

@@ -25,7 +25,7 @@ export function SavingsProductItem({ product }: SavingsProductItemProps) {
         />
       }
       right={isSelected ? <Assets.Icon name="icon-check-circle-green" /> : null}
-      onClick={() => setSelectedProductId(product.id)}
+      onClick={() => setSelectedProductId(isSelected ? null : product.id)}
     />
   );
 }
