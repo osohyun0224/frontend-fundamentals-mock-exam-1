@@ -8,16 +8,7 @@ import { CalculationResult } from '@/savings/features/result/CalculationResult';
 
 export function SavingsCalculatorPage() {
   const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
-
   const savingsData = useSavingsCalculator();
-  const {
-    targetAmount,
-    monthlyAmount,
-    savingPeriod,
-    setTargetAmount,
-    setMonthlyAmount,
-    setSavingPeriod,
-  } = savingsData;
 
   return (
     <SavingsProvider value={savingsData}>
@@ -25,14 +16,7 @@ export function SavingsCalculatorPage() {
 
       <Spacing size={16} />
 
-      <SavingsInputForm
-        targetAmount={targetAmount}
-        monthlyAmount={monthlyAmount}
-        savingPeriod={savingPeriod}
-        onTargetAmountChange={setTargetAmount}
-        onMonthlyAmountChange={setMonthlyAmount}
-        onSavingPeriodChange={setSavingPeriod}
-      />
+      <SavingsInputForm />
 
       <Spacing size={24} />
       <Border height={16} />

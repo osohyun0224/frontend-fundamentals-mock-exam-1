@@ -6,9 +6,12 @@ interface SavingsContextValue {
   monthlyAmount: string;
   savingPeriod: number;
   
+  setTargetAmount: (value: string) => void;
+  setMonthlyAmount: (value: string) => void;
+  setSavingPeriod: (value: number) => void;
+
   selectedProductId: string | null;
   selectedProduct: SavingsProduct | undefined;
-  
   setSelectedProductId: (id: string | null) => void;
   
   filteredProducts: SavingsProduct[];
