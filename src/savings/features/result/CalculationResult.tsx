@@ -44,6 +44,17 @@ export function CalculationResult() {
     <div key="results-tab">
       <Spacing size={8} />
 
+      <ListHeader
+        title={<ListHeader.TitleParagraph fontWeight="bold">선택한 상품</ListHeader.TitleParagraph>}
+      />
+      <Spacing size={12} />
+
+      <SavingsProductItem product={selectedProduct} />
+
+      <Spacing size={8} />
+      <Border height={16} />
+      <Spacing size={8} />
+
       <ListRow
         contents={
           <ListRow.Texts
