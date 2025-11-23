@@ -43,8 +43,9 @@
     - [4. Props Drilling 제거](#4-props-drilling-제거)
     - [5. 필드 단위 응집도](#5-필드-단위-응집도)
     - [6. React의 key를 활용한 상태 관리](#6-react의-key를-활용한-상태-관리)
-      - [문제 상황: Tab 컴포넌트의 반응형 레이아웃 깨짐](#문제-상황-tab-컴포넌트의-반응형-레이아웃-깨짐)
-      - [해결 방법: key를 활용한 명시적 제어](#해결-방법-key를-활용한-명시적-제어)
+      - [구현 코드](#구현-코드)
+      - [왜 이렇게 구현했나요?](#왜-이렇게-구현했나요)
+      - [기대 효과](#기대-효과)
   - [접근성 (Accessibility)](#접근성-accessibility)
     - [1. ARIA 속성](#1-aria-속성)
     - [2. 키보드 네비게이션](#2-키보드-네비게이션)
@@ -440,29 +441,11 @@ Context API를 사용하여 중간 컴포넌트의 불필요한 props 전달을 
 
 ### 6. React의 key를 활용한 상태 관리
 
-#### 문제 상황: Tab 컴포넌트의 반응형 레이아웃 깨짐
+[React 공식 문서](https://ko.react.dev/learn/preserving-and-resetting-state)의 "상태 보존과 리셋" 패턴을 적용하여 탭 전환 시 컴포넌트를 명시적으로 제어했습니다.
 
-초기 구현에서는 `&&` 연산자로 조건부 렌더링을 했습니다:
-
-```typescript
-// 문제가 있는 코드
-<div role="tabpanel">
-  {activeTab === 'products' && <SavingsProductList />}
-  {activeTab === 'results' && <CalculationResult />}
-</div>
-```
-
-**발생한 문제:**
-- Tab 컴포넌트의 활성 상태 표시(밑줄)가 화면 전체 너비로 늘어남
-- 반응형 레이아웃이 깨짐
-- `&&` 연산자가 `false`를 반환하여 DOM 구조가 불안정해짐
-
-#### 해결 방법: key를 활용한 명시적 제어
-
-[React 공식 문서](https://ko.react.dev/learn/preserving-and-resetting-state)의 "상태 보존과 리셋" 패턴을 적용했습니다. React는 UI 트리에서 컴포넌트의 위치를 기준으로 상태를 추적하는데, `key`를 사용하면 "같은 위치에 있어도 다른 컴포넌트"임을 명시적으로 알릴 수 있습니다.
+#### 구현 코드
 
 ```typescript
-// 해결된 코드
 <div 
   role="tabpanel" 
   key={activeTab === 'products' ? 'products-tab' : 'results-tab'}
@@ -471,27 +454,76 @@ Context API를 사용하여 중간 컴포넌트의 불필요한 props 전달을 
 </div>
 ```
 
-**핵심 개선사항:**
+#### 왜 이렇게 구현했나요?
 
-1. **일관된 DOM 구조**: `&&` 대신 삼항 연산자 사용
-   - `&&`는 `false` 값을 DOM에 남겨 구조를 불안정하게 만듦
-   - 삼항 연산자는 항상 하나의 요소만 렌더링
+**React의 상태 추적 메커니즘 이해**
 
-2. **명시적 컴포넌트 정체성**: `key` prop 활용
-   - `key`가 변경되면 React는 완전히 새로운 컴포넌트로 인식
-   - Tab 컴포넌트가 DOM 구조 변화를 올바르게 감지
+React는 컴포넌트의 상태를 **UI 트리 내의 위치**를 기준으로 추적합니다. 같은 위치에 같은 타입의 컴포넌트가 렌더링되면, React는 이를 동일한 컴포넌트로 간주하고 상태를 보존합니다.
 
-3. **React 재조정 알고리즘 제어**
-   - `key` 없이는: React가 같은 위치의 `<div>`를 재사용 → 내부 내용만 교체
-   - `key` 있으면: React가 이전 `<div>`를 제거하고 새로운 `<div>` 생성
+```typescript
+// key 없이 조건부 렌더링하면?
+<div role="tabpanel">
+  {activeTab === 'products' ? <SavingsProductList /> : <CalculationResult />}
+</div>
+```
 
-**결과:**
-- Tab 활성 상태 표시가 올바른 너비로 표시됨
-- 반응형 레이아웃 정상 동작, 탭 전환 시 부드러운 UI 전환
+위 코드의 문제점:
+- `<div>` 자체는 항상 같은 위치에 존재
+- React는 내부 컴포넌트만 교체하고 `<div>`는 재사용
+- 이로 인해 Tab 컴포넌트가 DOM 구조 변화를 감지하지 못할 수 있음
+
+**`key`를 통한 명시적 제어**
+
+`key`를 부여하면 React에게 "이것은 다른 컴포넌트"라고 명시적으로 알릴 수 있습니다.
+
+```typescript
+// key로 명시적 제어
+<div 
+  role="tabpanel" 
+  key={activeTab === 'products' ? 'products-tab' : 'results-tab'}
+>
+```
+
+React의 동작:
+1. `key`가 `'products-tab'`에서 `'results-tab'`으로 변경됨
+2. React는 이전 `<div key="products-tab">`를 완전히 제거 (unmount)
+3. 새로운 `<div key="results-tab">`를 생성 (mount)
+4. 상위 Tab 컴포넌트가 DOM 변화를 감지하여 레이아웃을 재계산
+
+**삼항 연산자 vs `&&` 연산자**
+
+```typescript
+// ❌ 피해야 할 패턴
+{activeTab === 'products' && <SavingsProductList />}
+{activeTab === 'results' && <CalculationResult />}
+// false일 때 `false` 값이 DOM에 남아 구조가 불안정
+
+// ✅ 권장 패턴
+{activeTab === 'products' ? <SavingsProductList /> : <CalculationResult />}
+// 항상 하나의 요소만 렌더링되어 구조가 일관됨
+```
+
+#### 기대 효과
+
+**1. 컴포넌트 독립성 보장**
+- 각 탭이 완전히 독립적으로 마운트/언마운트됨
+- 이전 탭의 스크롤 위치, 입력 상태 등이 다음 탭에 영향을 주지 않음
+
+**2. 예측 가능한 UI 동작**
+- 탭 전환 시 항상 깨끗한 초기 상태로 시작
+- 사용자가 탭을 다시 방문해도 일관된 경험 제공
+
+**3. 라이브러리 호환성**
+- tosslib의 Tab 컴포넌트가 DOM 변화를 올바르게 감지
+- 활성 상태 표시(밑줄)가 정확한 위치와 너비로 렌더링됨
+
+**4. 성능 최적화 가능성**
+- 불필요한 컴포넌트가 메모리에 남지 않음
+- 탭 전환 시 이전 탭의 리소스가 정리됨
 
 **참고 자료:**
 - [React 공식 문서 - Preserving and Resetting State](https://ko.react.dev/learn/preserving-and-resetting-state)
-- 핵심 개념: React는 컴포넌트의 위치를 기준으로 상태를 추적하며, `key`를 통해 이를 명시적으로 제어할 수 있다
+- 핵심 개념: "React는 컴포넌트의 위치를 기준으로 상태를 추적하며, `key`를 위치의 일부로 사용하게 만들 수 있다"
 
 
 ## 접근성 (Accessibility)
