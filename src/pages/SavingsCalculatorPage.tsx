@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Assets,
   Border,
   colors,
-  http,
   ListHeader,
   ListRow,
   NavigationBar,
@@ -12,15 +11,8 @@ import {
   Tab,
   TextField,
 } from 'tosslib';
-
-interface SavingsProduct {
-  id: string;
-  name: string;
-  annualRate: number;
-  minMonthlyAmount: number;
-  maxMonthlyAmount: number;
-  availableTerms: number;
-}
+import { useSavingsProducts } from '@/hooks/queries/useSavingsProducts';
+import type { SavingsProduct } from '@/api/savingsProducts';
 
 function formatNumber(num: number): string {
   return num.toLocaleString('ko-KR');
@@ -40,23 +32,15 @@ function calculateRecommendedMonthlyAmount(targetAmount: number, savingPeriod: n
 }
 
 export function SavingsCalculatorPage() {
-  const [products, setProducts] = useState<SavingsProduct[]>([]);
   const [targetAmount, setTargetAmount] = useState('');
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [savingPeriod, setSavingPeriod] = useState(12);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
 
-  useEffect(() => {
-    async function fetchProducts() {
-      const response = await http.get<SavingsProduct[]>('/api/savings-products');
-      setProducts(response);
-    }
+  const { data: products = [] } = useSavingsProducts();
 
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((product: SavingsProduct) => {
     const monthlyAmountNum = Number(monthlyAmount.replace(/,/g, ''));
 
     if (!monthlyAmount || monthlyAmountNum === 0) {
@@ -71,10 +55,10 @@ export function SavingsCalculatorPage() {
     return isMonthlyAmountValid && isPeriodValid;
   });
 
-  const selectedProduct = products.find((product) => product.id === selectedProductId);
+  const selectedProduct = products.find((product: SavingsProduct) => product.id === selectedProductId);
 
   const recommendedProducts = filteredProducts
-    .sort((a, b) => b.annualRate - a.annualRate)
+    .sort((a: SavingsProduct, b: SavingsProduct) => b.annualRate - a.annualRate)
     .slice(0, 2);
 
   return (
@@ -137,7 +121,7 @@ export function SavingsCalculatorPage() {
 
       {activeTab === 'products' ? (
         <>
-          {filteredProducts.map((product) => {
+          {filteredProducts.map((product: SavingsProduct) => {
             const isSelected = selectedProductId === product.id;
 
             return (
@@ -230,7 +214,7 @@ export function SavingsCalculatorPage() {
               />
               <Spacing size={12} />
 
-              {recommendedProducts.map((product) => {
+              {recommendedProducts.map((product: SavingsProduct) => {
                 const isSelected = selectedProductId === product.id;
 
                 return (
