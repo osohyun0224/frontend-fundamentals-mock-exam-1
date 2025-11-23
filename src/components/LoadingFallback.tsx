@@ -13,6 +13,9 @@ const spin = keyframes`
 export function LoadingFallback() {
   return (
     <div
+      role="status"
+      aria-live="polite"
+      aria-label="데이터 로딩 중"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -29,6 +32,11 @@ export function LoadingFallback() {
           border-top-color: ${colors.blue600};
           border-radius: 50%;
           animation: ${spin} 0.8s linear infinite;
+
+          @media (prefers-reduced-motion: reduce) {
+            animation: none;
+            opacity: 0.6;
+          }
         `}
       />
       <Spacing size={16} />

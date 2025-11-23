@@ -16,9 +16,19 @@ export function SavingsProductItem({ product }: SavingsProductItemProps) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
+      aria-label={`${product.name} 적금 상품${isSelected ? ' (선택됨)' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => setSelectedProductId(isSelected ? null : product.id)}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setSelectedProductId(isSelected ? null : product.id);
+        }
+      }}
       style={{ cursor: 'pointer' }}
     >
       <ListRow
@@ -32,6 +42,10 @@ export function SavingsProductItem({ product }: SavingsProductItemProps) {
               color: isHovered ? colors.blue600 : colors.grey900,
               css: css`
                 transition: color 0.2s ease;
+
+                @media (prefers-reduced-motion: reduce) {
+                  transition: none;
+                }
               `,
             }}
             middle={`연 이자율: ${product.annualRate}%`}

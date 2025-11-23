@@ -7,7 +7,7 @@ export function SavingsProductList() {
 
   if (filteredProducts.length === 0) {
     return (
-      <div key="products-tab">
+      <div key="products-tab" role="status" aria-live="polite">
         <ListRow
           contents={
             <ListRow.Texts
@@ -24,9 +24,11 @@ export function SavingsProductList() {
   }
 
   return (
-    <div key="products-tab">
+    <div key="products-tab" role="list" aria-label="적금 상품 목록">
       {filteredProducts.map(product => (
-        <SavingsProductItem key={product.id} product={product} />
+        <div key={product.id} role="listitem">
+          <SavingsProductItem product={product} />
+        </div>
       ))}
     </div>
   );

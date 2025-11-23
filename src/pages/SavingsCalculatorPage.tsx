@@ -22,22 +22,26 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab
-        onChange={value => {
-          if (value === 'products' || value === 'results') {
-            setActiveTab(value);
-          }
-        }}
-      >
-        <Tab.Item value="products" selected={activeTab === 'products'}>
-          적금 상품
-        </Tab.Item>
-        <Tab.Item value="results" selected={activeTab === 'results'}>
-          계산 결과
-        </Tab.Item>
-      </Tab>
+      <div role="tablist" aria-label="적금 계산기 탭">
+        <Tab
+          onChange={value => {
+            if (value === 'products' || value === 'results') {
+              setActiveTab(value);
+            }
+          }}
+        >
+          <Tab.Item value="products" selected={activeTab === 'products'}>
+            적금 상품
+          </Tab.Item>
+          <Tab.Item value="results" selected={activeTab === 'results'}>
+            계산 결과
+          </Tab.Item>
+        </Tab>
+      </div>
 
-      {activeTab === 'products' ? <SavingsProductList /> : <CalculationResult />}
+      <div role="tabpanel" aria-labelledby={activeTab === 'products' ? '적금 상품 탭' : '계산 결과 탭'}>
+        {activeTab === 'products' ? <SavingsProductList /> : <CalculationResult />}
+      </div>
     </SavingsProvider>
   );
 }
