@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { orderBy } from 'es-toolkit';
 import type { SavingsProduct } from '@/savings/api/savingsProducts';
 
 export function useFilteredProducts(products: SavingsProduct[], monthlyAmount: string, savingPeriod: number) {
@@ -20,10 +21,7 @@ export function useFilteredProducts(products: SavingsProduct[], monthlyAmount: s
   }, [products, monthlyAmount, savingPeriod]);
 
   const recommendedProducts = useMemo(() => {
-    return filteredProducts
-      .slice()
-      .sort((a, b) => b.annualRate - a.annualRate)
-      .slice(0, 2);
+    return orderBy(filteredProducts, ['annualRate'], ['desc']).slice(0, 2);
   }, [filteredProducts]);
 
   return {
