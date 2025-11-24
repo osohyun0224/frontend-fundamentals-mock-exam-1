@@ -39,7 +39,11 @@ export function SavingsCalculatorPage() {
         </Tab>
       </div>
 
-      <div role="tabpanel" aria-labelledby={activeTab === 'products' ? '적금 상품 탭' : '계산 결과 탭'}>
+      <div
+        role="tabpanel"
+        aria-labelledby={activeTab === 'products' ? '적금 상품 탭' : '계산 결과 탭'}
+        key={activeTab === 'products' ? 'products-tab' : 'results-tab'}
+      >
         {activeTab === 'products' ? <SavingsProductList /> : <CalculationResult />}
       </div>
     </SavingsProvider>
